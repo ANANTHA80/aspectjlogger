@@ -1,0 +1,16 @@
+<aspectj>
+	<aspects>
+		<aspect name="com.scribblepad.aspectjlogger.AbstractAspectClass" />
+		<concrete-aspect name="com.scribblepad.aspectjlogger.AspectClass"
+			extends="com.scribblepad.aspectjlogger.AbstractAspectClass">
+			<pointcut name="scope" expression="execution(* org.springframework.samples..*(..))" />
+		</concrete-aspect>
+	</aspects>
+	<weaver options="-verbose">
+	<exclude within="org.springframework.*"/>
+	<exclude within="java.lang..*"/>
+	<exclude within="com.sun..*"/>
+	<exclude within="com.zaxxer..*"/>
+	<exclude within="com.fasterxml..*"/>
+	</weaver>
+</aspectj>
