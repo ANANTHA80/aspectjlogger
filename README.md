@@ -11,14 +11,14 @@ How are the steps
 Download all files from artifact folder and keep it in a folder. For demonstration purposes we will keep it in C:/DebugApp folder. 
 
 ## Step#2
-Change C:/DebugApp/aop.xml to add your point cut expression
+Change C:/DebugApp/aop.xml to add your point cut expression given here in bold.
 
-- \<pointcut name="scope" expression="**execution(* org.springframework.samples..*(..))**" /\>
+- \<pointcut name="scope" expression="**execution(\* org.springframework.samples..\*(..))**" /\>
 
 ## Step#3
 Add below VM arguments while running your Java Application.
 
--Dorg.aspectj.weaver.loadtime.configuration=file:C:/DebugApp/aop.xml -Dlog4j.configuration=file:C:/DebugApp/log4j.properties -javaagent:"C:/DebugApp/aspectlogger-0.0.1.jar"
+- -Dorg.aspectj.weaver.loadtime.configuration=file:C:/DebugApp/aop.xml -Dlog4j.configuration=file:C:/DebugApp/log4j.properties -javaagent:"C:/DebugApp/aspectlogger-0.0.1.jar"
 
 # Examples:
 ## EXECUTE JAR FILE
