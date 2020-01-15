@@ -1,5 +1,7 @@
 package com.scribblepad.aspectjlogger;
 
+import java.util.Arrays;
+
 import org.apache.log4j.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -24,24 +26,22 @@ public abstract class AbstractAspectClass {
 	public Object AroundAdvice(ProceedingJoinPoint point) throws Throwable {
 		Logger logger = Logger.getRootLogger();
 		Object result = null;
+		String methodSignature = point.toLongString();
+		String arguments = "";
 		if (!flag.get().equalsIgnoreCase(point.toLongString())) {
-
-			logger.debug("Signature: " + point.toLongString());
-			if (point.getArgs() != null) {
-
-				for (Object obj : point.getArgs()) {
-					logger.debug("Arg Value: " + obj);
-				}
-			}
+			arguments = point.getArgs() != null ? Arrays.deepToString(point.getArgs()) : "None";
 			try {
 				flag.set(point.toLongString());
 				result = point.proceed();
 			} catch (Throwable t) {
+
+				logger.error(String.format("METHOD: %s. PARAMETERS:  %s. ERROR: %s", methodSignature, arguments,
+						t.getMessage()));
 				logger.error(t);
-				// Write what you want to do if exception is thrown.
-				throw t; // maintain passivity with application.
+				throw t; 
 			}
-			logger.debug("Return Value: " + result);
+			logger.debug(String.format("METHOD: %s. PARAMETERS: %s. RETURN VALUE: %s", methodSignature, arguments,
+					result == null ? "None" : result));
 			return result;
 		} else {
 			return point.proceed();
