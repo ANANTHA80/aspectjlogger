@@ -33,6 +33,13 @@ Add below VM arguments while running your Java Application.
 - For applications running on servers like Tomcat, add the VM argument in JAVA_OPTS enviorment variable.
   set JAVA_OPTS="-Dorg.aspectj.weaver.loadtime.configuration=file:C:/DebugApp/aop.xml -Dlog4j.configuration=file:C:/DebugApp/log4j.properties -javaagent:\\"C:/DebugApp/aspectlogger-0.0.1.jar\\""
 
+# SAMPLE LOG OUTPUT
+## NO ERRORS
+- 2020-01-15 17:37:23 DEBUG root:43 - METHOD: execution(public org.springframework.samples.petclinic.owner.Pet org.springframework.samples.petclinic.owner.Owner.getPet(java.lang.String, boolean)). PARAMETERS: [smally, true]. RETURN VALUE: None
+
+## ERRORS
+- 2020-01-15 17:37:44 ERROR root:38 - METHOD: execution(public java.lang.String org.springframework.samples.petclinic.system.CrashController.triggerException()). PARAMETERS:  []. ERROR: Expected: controller used to showcase what happens when an exception is thrown
+
 # BUILD 
 - run below maven command from project folder.
 - **mvn clean package**
