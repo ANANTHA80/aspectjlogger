@@ -36,6 +36,7 @@ public abstract class AbstractAspectClass {
 				flag.set(point.toLongString());
 				startTime = System.currentTimeMillis();
 				result = point.proceed();
+				endTime = System.currentTimeMillis();
 			} catch (Throwable t) {
 
 				logger.error(String.format("METHOD: %s. PARAMETERS:  %s. ERROR: %s. Execution Time(ms): %d", methodSignature, arguments,
