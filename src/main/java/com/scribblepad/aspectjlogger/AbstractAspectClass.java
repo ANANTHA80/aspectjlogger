@@ -25,6 +25,8 @@ public abstract class AbstractAspectClass {
 	@Around("scope()")
 	public Object AroundAdvice(ProceedingJoinPoint point) throws Throwable {
 		Logger logger = Logger.getRootLogger();
+		long startTime = 0;
+		long  endTime = 0;
 		Object result = null;
 		String methodSignature = point.toLongString();
 		String arguments = "";
@@ -32,16 +34,17 @@ public abstract class AbstractAspectClass {
 			arguments = point.getArgs() != null ? Arrays.deepToString(point.getArgs()) : "None";
 			try {
 				flag.set(point.toLongString());
+				startTime = System.currentTimeMillis();
 				result = point.proceed();
 			} catch (Throwable t) {
 
-				logger.error(String.format("METHOD: %s. PARAMETERS:  %s. ERROR: %s", methodSignature, arguments,
-						t.getMessage()));
+				logger.error(String.format("METHOD: %s. PARAMETERS:  %s. ERROR: %s. Execution Time(ms): %d", methodSignature, arguments,
+						t.getMessage(),endTime-startTime));
 				logger.error(t);
 				throw t; 
 			}
-			logger.debug(String.format("METHOD: %s. PARAMETERS: %s. RETURN VALUE: %s", methodSignature, arguments,
-					result == null ? "None" : result));
+			logger.debug(String.format("METHOD: %s. PARAMETERS: %s. RETURN VALUE: %s.  Execution Time(ms): %d", methodSignature, arguments,
+					result == null ? "None" : result,endTime-startTime));
 			return result;
 		} else {
 			return point.proceed();
