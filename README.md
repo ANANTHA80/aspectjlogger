@@ -1,7 +1,7 @@
 # aspectjlogger
 Helps to debug application by adding logs without touching its code. 
 
-It uses AspectJweaver to weave the code at run time. It logs method signature, arguments, return value and exeception thrown.
+It uses AspectJweaver to weave the code at run time. It logs method signature, arguments, return value, exeception thrown and execution time.
 
 How are the steps
 
@@ -35,10 +35,10 @@ Add below VM arguments while running your Java Application.
 
 # SAMPLE LOG OUTPUT
 ## NO ERRORS
-- 2020-01-15 17:37:23 DEBUG root:43 - METHOD: execution(public org.springframework.samples.petclinic.owner.Pet org.springframework.samples.petclinic.owner.Owner.getPet(java.lang.String, boolean)). PARAMETERS: [smally, true]. RETURN VALUE: None
+- 2020-01-15 17:37:23 DEBUG root:43 - METHOD: execution(public org.springframework.samples.petclinic.owner.Pet org.springframework.samples.petclinic.owner.Owner.getPet(java.lang.String, boolean)). PARAMETERS: [smally, true]. RETURN VALUE: None  .Execution Time(ms): 317
 
 ## ERRORS
-- 2020-01-15 17:37:44 ERROR root:38 - METHOD: execution(public java.lang.String org.springframework.samples.petclinic.system.CrashController.triggerException()). PARAMETERS:  []. ERROR: Expected: controller used to showcase what happens when an exception is thrown
+- 2020-01-15 17:37:44 ERROR root:38 - METHOD: execution(public java.lang.String org.springframework.samples.petclinic.system.CrashController.triggerException()). PARAMETERS:  []. ERROR: Expected: controller used to showcase what happens when an exception is thrown.  Execution Time(ms): 317
 
 # BUILD 
 - run below maven command from project folder.
@@ -53,6 +53,7 @@ Add below VM arguments while running your Java Application.
 4. If for some reasons weaving does not work. Add -showWeaveInfo in aop.xml 
 \<weaver options="-verbose **-showWeaveInfo**"\>
 5. Check file:C:/DebugApp/log4j.properties for log file location and name. It is named as log-myapp.log. It will be in current executing directory.
+6. In Linux enviroments ensure artifacts/aspectlogger-0.0.1.jar and other jars in artifacts/lib/*.jar are not read only.
 
 
 
