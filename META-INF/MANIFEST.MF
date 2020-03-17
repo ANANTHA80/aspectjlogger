@@ -1,5 +1,4 @@
 Manifest-Version: 1.0
-Class-Path: libs/aspectjweaver-1.9.5.jar libs/log4j-1.2.17.jar
 Premain-Class: org.aspectj.weaver.loadtime.Agent
 Agent-Class: org.aspectj.weaver.loadtime.Agent
 Can-Redefine-Classes: true

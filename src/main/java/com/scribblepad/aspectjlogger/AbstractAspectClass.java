@@ -1,8 +1,9 @@
 package com.scribblepad.aspectjlogger;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -19,36 +20,62 @@ public abstract class AbstractAspectClass {
 
 	};
 
+	private static List<String> argumentsList = new ArrayList<>();
+	private static LoggerInfo logger = new LoggerInfo();
+	static {
+		LoggerUtil.logHeader();
+	}
+
 	@Pointcut
 	public abstract void scope();
 
 	@Around("scope()")
 	public Object AroundAdvice(ProceedingJoinPoint point) throws Throwable {
-		Logger logger = Logger.getRootLogger();
-		long startTime = 0;
-		long  endTime = 0;
-		Object result = null;
-		String methodSignature = point.toLongString();
-		String arguments = "";
-		if (!flag.get().equalsIgnoreCase(point.toLongString())) {
-			arguments = point.getArgs() != null ? Arrays.deepToString(point.getArgs()) : "None";
-			try {
-				flag.set(point.toLongString());
-				startTime = System.currentTimeMillis();
-				result = point.proceed();
-				endTime = System.currentTimeMillis();
-			} catch (Throwable t) {
 
-				logger.error(String.format("METHOD: %s. PARAMETERS:  %s. ERROR: %s. Execution Time(ms): %d", methodSignature, arguments,
-						t.getMessage(),endTime-startTime));
-				logger.error(t);
-				throw t; 
+		long startTime = 0;
+		long endTime = 0;
+		Object result = null;
+		String methodSignature = point.getSignature().toLongString().replace(",", "|");
+		logger.setMethodSignature(methodSignature);
+		logger.setParameterValues("");
+		if (!flag.get().equalsIgnoreCase(methodSignature)) {
+			argumentsList.clear();
+			if (point.getArgs() != null) {
+
+				for (Object arg : point.getArgs()) {
+
+					argumentsList.add(objToString(arg));
+				}
 			}
-			logger.debug(String.format("METHOD: %s. PARAMETERS: %s. RETURN VALUE: %s.  Execution Time(ms): %d", methodSignature, arguments,
-					result == null ? "None" : result,endTime-startTime));
+			logger.setParameterValues(String.join("|", argumentsList));
+
+			try {
+				flag.set(methodSignature);
+				startTime = new Date().getTime();
+				result = point.proceed();
+				endTime = new Date().getTime() - startTime;
+				logger.setReturnValue(objToString(result));
+				logger.setExecutionTime((int) endTime);
+
+			} catch (Throwable t) {
+				logger.setReturnValue("ERROR: " + t.getMessage() + ", " + t.getStackTrace()[0]);
+				endTime = new Date().getTime() - startTime;
+				logger.setExecutionTime((int) endTime);
+				throw t;
+			}
+			LoggerUtil.logMessage(logger);
 			return result;
 		} else {
 			return point.proceed();
 		}
+	}
+
+	String objToString(Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return (o.toString().contains(o.getClass().getName() + "@" + Integer.toHexString(o.hashCode()))
+				? o.getClass().getSimpleName()
+				: o.toString());
 	}
 }
